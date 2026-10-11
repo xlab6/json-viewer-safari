@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+[![Download DMG](https://img.shields.io/github/v/release/xlab6/json-viewer-safari?style=for-the-badge&label=Download%20DMG&color=blue)](https://github.com/xlab6/json-viewer-safari/releases/latest/download/JSON-Viewer.dmg)
+
 A Safari Web Extension that automatically detects JSON pages and formats them for reading.
 
 Requires macOS + Xcode; Node ≥ 18 only for the tests and the icon script.

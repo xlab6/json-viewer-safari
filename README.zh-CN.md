@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+[![下载 DMG](https://img.shields.io/github/v/release/xlab6/json-viewer-safari?style=for-the-badge&label=%E4%B8%8B%E8%BD%BD%20DMG&color=blue)](https://github.com/xlab6/json-viewer-safari/releases/latest/download/JSON-Viewer.dmg)
+
 自动识别 JSON 页面并格式化输出的 Safari Web Extension。
 
 需要 macOS + Xcode；Node ≥ 18 仅用于测试与图标脚本。
