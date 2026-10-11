@@ -1,7 +1,6 @@
 # JSON Viewer for Safari
 
-自动识别 JSON 页面并**格式化输出**的 Safari Web Extension，参考 Chrome 商店的
-[JSON Viewer](https://chromewebstore.google.com/detail/json-viewer/gbdbademeighmnbliehmnoifmabbedbp)。
+自动识别 JSON 页面并**格式化输出**的 Safari Web Extension。
 
 **环境要求**：macOS + Xcode（工程在 Xcode 27 下验证通过）；Node ≥ 18（仅用于测试与图标脚本调用）。
 
