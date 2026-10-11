@@ -6,6 +6,10 @@
 
 需要 macOS + Xcode；Node ≥ 18 仅用于测试与图标脚本。
 
+## 截图
+
+![扩展接管 api.github.com/feeds 后的格式化效果](docs/screenshot.png)
+
 ## 功能
 
 - **自动接管 JSON 页面**：`Content-Type` 为 JSON，或正文是单个 `<pre>` / 纯文本的 JSON；

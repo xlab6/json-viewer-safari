@@ -6,6 +6,10 @@ A Safari Web Extension that automatically detects JSON pages and formats them fo
 
 Requires macOS + Xcode; Node ≥ 18 only for the tests and the icon script.
 
+## Screenshot
+
+![JSON formatted by the extension on api.github.com/feeds](docs/screenshot.png)
+
 ## Features
 
 - **Automatic takeover**: triggered by a JSON `Content-Type` or a body that is a single
