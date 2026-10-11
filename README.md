@@ -14,18 +14,10 @@
 - **等宽字体自选**：下拉列出系统安装的全部等宽字体
 - **主题**：自动跟随系统明暗 / 暗 / 亮，持久化
 - **顶栏**：请求网址（超长中间省略）+ 渲染时间戳 + 大小 · 行数 · 键数 · 深度
-- **隐藏滚动条**，滚动超过 300px 出现回顶按钮
+- **回顶按钮**：滚动超过 300px 后在右下角出现
 - **复制 / 下载 .json**；解析失败时显示错误原因与原文
 
 ## 快速开始
-
-### 免安装预览
-
-```bash
-open demo/preview.html
-```
-
-预览页与扩展加载同一份 `styles.css` + `content.js`，行号、字体、主题、链接行为都可直接验证。
 
 ### 在 Safari 中运行
 
@@ -73,7 +65,7 @@ json-viewer-safari/
 │   ├── build-icons.swift    # 抠底 + 裁剪 + 全尺寸生成（npm run icons）
 │   └── lint-manifest.js
 ├── tests/smoke.mjs          # 冒烟测试（146 项断言）
-├── demo/preview.html        # 免安装预览
+├── demo/preview.html        # 预览页
 ├── demo/sample.json
 └── xcode/JSON Viewer/       # safari-web-extension-converter 生成的工程
 ```
@@ -95,30 +87,6 @@ xcrun safari-web-extension-converter ./extension \
 > `Embedded binary's bundle identifier is not prefixed` 构建失败；
 > 另外确认 manifest 保留 `nativeMessaging` 权限，否则字体枚举失效。
 
-## manifest 要点
-
-- MV2：Safari 支持最稳定，不依赖 `background.service_worker`
-- `storage`：主题与字体持久化；`nativeMessaging`：原生枚举系统等宽字体
-  （content script 不能直连原生，须由 background 转发）
-- `run_at: document_start` + 同时注入 CSS，避免原始 JSON 闪屏
-
-## 常见问题
-
-**本地 `file://xxx.json` 没有格式化？**
-Safari 默认不给扩展访问本地文件——「设置 → 扩展 → JSON Viewer」把网站访问权限设为**所有网站**，
-或用上面的 `python3 -m http.server` 方式访问。
-
-**字体下拉里只有 Default font？**
-原生枚举需要扩展已启用（无需保持 App 打开）；`preview.html` 没有原生通道，
-只显示 canvas 能探测到的字体——完整列表请在 Safari 里跑扩展查看。
-
-**改了代码，Safari 里还是旧的？**
-Xcode `Cmd+R` 重新 Run；若图标/欢迎窗还是旧的，退出 App 再启动（窗口缓存了旧资源）。
-
-**Bundle ID 前缀不一致构建失败？** 见 [Xcode 工程](#xcode-工程)。
-
-**换自己的 logo？** 替换 `scripts/logo-source.png` → `npm run icons` → `Cmd+R`。
-
 ## 仓库
 
 ```bash
@@ -126,16 +94,3 @@ git clone git@github.com:xlab6/json-viewer-safari.git
 ```
 
 默认分支 `main`。
-
-## 版本记录
-
-### 1.1.0（当前）
-
-- 单一展示模式 + 行号；等宽字体改为原生枚举系统字体
-- 顶栏改为网址 + 时间戳两行；链接 ⌘ 按下才显形
-- 隐藏滚动条 + 回顶按钮；新 logo 替换全部图标
-- manifest 中英双语；欢迎窗显示版本与仓库地址
-
-### 1.0.0
-
-- 初始版本：树形视图 + 搜索 + 展开折叠，生成 Xcode 工程
