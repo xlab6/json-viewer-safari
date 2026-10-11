@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  JSON Viewer
 //
-//  Created by Macintosh on 2026-10-10.
+//  Created by enhe on 2026-10-10.
 //
 
 import Cocoa
