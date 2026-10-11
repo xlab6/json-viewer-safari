@@ -94,11 +94,3 @@ xcrun safari-web-extension-converter ./extension \
 > 扩展是 `cn.oxzz.json-viewer.Extension`，否则报
 > `Embedded binary's bundle identifier is not prefixed` 构建失败；
 > 另外确认 manifest 保留 `nativeMessaging` 权限，否则字体枚举失效。
-
-## 仓库
-
-```bash
-git clone git@github.com:xlab6/json-viewer-safari.git
-```
-
-默认分支 `main`。

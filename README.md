@@ -99,11 +99,3 @@ xcrun safari-web-extension-converter ./extension \
 > `cn.oxzz.json-viewer` and the extension `cn.oxzz.json-viewer.Extension`, otherwise
 > the build fails with `Embedded binary's bundle identifier is not prefixed`.
 > Also keep the `nativeMessaging` permission in the manifest, or font enumeration stops working.
-
-## Repository
-
-```bash
-git clone git@github.com:xlab6/json-viewer-safari.git
-```
-
-Default branch: `main`.
