@@ -1,0 +1,71 @@
+* {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+}
+
+:root {
+    color-scheme: light dark;
+
+    --spacing: 20px;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: var(--spacing);
+    margin: 0 calc(var(--spacing) * 2);
+    height: 100%;
+
+    font: -apple-system-short-body;
+    text-align: center;
+}
+
+body:not(.state-on, .state-off) :is(.state-on, .state-off) {
+    display: none;
+}
+
+body.state-on :is(.state-off, .state-unknown) {
+    display: none;
+}
+
+body.state-off :is(.state-on, .state-unknown) {
+    display: none;
+}
+
+button {
+    font-size: 1em;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 0.85em;
+    color: #7c7c7c;
+}
+
+.meta .version {
+    padding: 2px 9px;
+    border: 1px solid rgba(128, 128, 128, 0.45);
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+a.repo {
+    color: #007aff;
+    text-decoration: none;
+}
+
+a.repo:hover {
+    text-decoration: underline;
+}

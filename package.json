@@ -1,0 +1,14 @@
+{
+  "name": "json-viewer-safari",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Safari Web Extension that pretty-prints and highlights JSON documents.",
+  "scripts": {
+    "icons": "swift scripts/build-icons.swift",
+    "test": "node tests/smoke.mjs",
+    "check": "node --check extension/content.js && node --check extension/background.js && node scripts/lint-manifest.js"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.2"
+  }
+}

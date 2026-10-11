@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON Viewer UI 预览</title>
+  <!-- 与扩展相同的资源；content.js 在 head 中加载，body 里只放一个 <pre>，
+       于是它会像接管真实 JSON 页面一样接管这个预览页。
+       提示：链接平时就是普通字符串；按住 ⌘ / Ctrl 时悬停的那条会高亮，
+       此时点击即可在新标签页打开。 -->
+  <link rel="stylesheet" href="../extension/styles.css">
+  <script src="../extension/content.js"></script>
+</head>
+<body>
+<pre>{
+  "name": "json-viewer-safari",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Safari Web Extension that pretty-prints and highlights JSON documents.",
+  "homepage": "https://github.com/example/json-viewer-safari",
+  "keywords": ["json", "safari", "extension", "formatter", "viewer"],
+  "engines": { "node": ">=18" },
+  "docs": {
+    "readme": "https://example.com/docs/readme.html",
+    "api": "https://api.example.com/v1/items?page=2&limit=10",
+    "support": "mailto:support@example.com?subject=JSON%20Viewer",
+    "note": "Cmd+Click opens links; see https://example.com/usage for details."
+  },
+  "long": "This string is intentionally longer than one hundred and twenty characters so the inline collapse behaviour of the viewer can be verified in the browser.",
+  "unicode": "中文测试 ✓ 🎉",
+  "matrix": [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+  "primitives": [true, false, null, 0, -1, 3.14159, 1.5e10]
+}
+</pre>
+</body>
+</html>

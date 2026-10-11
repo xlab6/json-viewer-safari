@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "JSON Viewer",
+  "version": "1.1.0",
+  "description": "自动识别 JSON 页面并格式化输出：语法高亮、行号、系统等宽字体自选、明暗主题、复制与下载。\nAuto-detects JSON pages and pretty-prints them: syntax highlighting, line numbers, system monospace fonts, light/dark theme, copy & download.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "nativeMessaging"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ]
+}

@@ -1,0 +1,452 @@
+/* JSON Viewer – Safari Web Extension styles
+ *
+ * Everything is scoped under html.jv-html / .jv-root so normal pages are
+ * untouched. One display mode: pretty-printed JSON with per-line syntax
+ * highlighting and a line-number gutter (a CSS counter, so hidden lines are
+ * never counted). Two themes; the resolved one is applied by the content
+ * script through html.jv-html[data-theme] (and mirrored on .jv-root).
+ */
+
+html.jv-html {
+  --jv-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --jv-bg: #ffffff;
+  --jv-surface: #f6f8fa;
+  --jv-fg: #1f2328;
+  --jv-muted: #656d76;
+  --jv-punct: #656d76;
+  --jv-border: #d0d7de;
+  --jv-accent: #0969da;
+  --jv-focus: rgba(9, 105, 218, 0.18);
+  --jv-key: #0550ae;
+  --jv-str: #1a7f37;
+  --jv-num: #953800;
+  --jv-bool: #8250df;
+  --jv-null: #cf222e;
+  --jv-hover: rgba(175, 184, 193, 0.24);
+  --jv-toast-bg: #1f2328;
+  --jv-toast-fg: #ffffff;
+  --jv-err-bg: rgba(207, 34, 46, 0.08);
+  --jv-line-no: #8c959f;
+  --jv-lh: 1.8;   /* fixed line height */
+}
+
+html.jv-html[data-theme='dark'] {
+  --jv-bg: #0d1117;
+  --jv-surface: #161b22;
+  --jv-fg: #e6edf3;
+  --jv-muted: #8b949e;
+  --jv-punct: #8b949e;
+  --jv-border: #30363d;
+  --jv-accent: #4493f8;
+  --jv-focus: rgba(68, 147, 248, 0.25);
+  --jv-key: #79c0ff;
+  --jv-str: #7ee787;
+  --jv-num: #ffa657;
+  --jv-bool: #d2a8ff;
+  --jv-null: #ff7b72;
+  --jv-hover: rgba(110, 118, 129, 0.24);
+  --jv-toast-bg: #30363d;
+  --jv-toast-fg: #e6edf3;
+  --jv-err-bg: rgba(255, 123, 114, 0.1);
+  --jv-line-no: #6e7681;
+}
+
+/* ------------------------------------------------------------------ resets */
+
+html.jv-html,
+html.jv-html body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--jv-bg) !important;
+  color: var(--jv-fg) !important;
+}
+
+html.jv-html body {
+  min-height: 100vh;
+  font-family: var(--jv-mono);
+}
+
+html.jv-html * {
+  box-sizing: border-box;
+}
+
+.jv-root [hidden] {
+  display: none !important;
+}
+
+/* Scrollbars are hidden entirely — scrolling itself keeps working
+   (wheel / trackpad / keyboard / drag). */
+html.jv-html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.jv-html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+/* -------------------------------------------------------------------- root */
+
+.jv-root {
+  min-height: 100vh;
+  background: var(--jv-bg);
+  color: var(--jv-fg);
+  font-family: var(--jv-mono);
+  font-size: 12.5px;
+  line-height: var(--jv-lh);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ----------------------------------------------------------------- top bar */
+
+.jv-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 9px 14px;
+  background: var(--jv-surface);
+  border-bottom: 1px solid var(--jv-border);
+  -webkit-backdrop-filter: saturate(1.4) blur(8px);
+  backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.jv-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.jv-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.jv-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.jv-sep {
+  color: var(--jv-muted);
+}
+
+.jv-time {
+  font-size: 11.5px;
+  color: var(--jv-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.jv-url {
+  font-weight: 600;
+  font-size: 12.5px;
+  max-width: 52vw;   /* alone on its line now — give it more room */
+  min-width: 8ch;          /* never squeeze the URL into an invisible sliver */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.jv-url:hover {
+  color: var(--jv-accent);
+}
+
+.jv-stats {
+  font-size: 11.5px;
+  color: var(--jv-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jv-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* --------------------------------------------------------------- controls */
+
+.jv-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--jv-border);
+  background: var(--jv-bg);
+  color: var(--jv-fg);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+
+.jv-btn:hover {
+  border-color: var(--jv-accent);
+  color: var(--jv-accent);
+}
+
+.jv-btn:active {
+  transform: translateY(0.5px);
+}
+
+.jv-btn:focus-visible {
+  outline: 2px solid var(--jv-accent);
+  outline-offset: 1px;
+}
+
+.jv-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 24px 6px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--jv-border);
+  background-color: var(--jv-bg);
+  color: var(--jv-fg);
+  cursor: pointer;
+  max-width: 210px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1.5 5 5.5 9 1.5' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.jv-select:hover {
+  border-color: var(--jv-accent);
+  color: var(--jv-accent);
+}
+
+.jv-select:focus-visible {
+  outline: none;
+  border-color: var(--jv-accent);
+  box-shadow: 0 0 0 3px var(--jv-focus);
+}
+
+/* ------------------------------------------------------------- line view */
+
+.jv-main {
+  min-height: calc(100vh - 64px);
+}
+
+/* Line-number gutter: a plain CSS counter, no divider line, tuned to match
+   the reference viewer — ~40px numeric column, content starting at 46px. */
+.jv-pre {
+  counter-reset: jv-line;
+  margin: 0;
+  padding: 8px 14px 80px 0;
+  font-family: var(--jv-mono);
+  font-size: 12.5px;
+  line-height: var(--jv-lh);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+
+.jv-pre code {
+  font: inherit;
+}
+
+.jv-ln {
+  position: relative;
+  display: block;
+  counter-increment: jv-line;
+  padding-left: 46px;
+  min-height: calc(var(--jv-lh) * 1em);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.jv-ln::before {
+  content: counter(jv-line);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1px 6px 0 0;
+  font-size: 11px;
+  line-height: var(--jv-lh);
+  color: var(--jv-line-no);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+.jv-ln:hover {
+  background: var(--jv-hover);
+}
+
+/* Huge documents: plain, unnumbered block. */
+.jv-pre.jv-plain {
+  padding-left: 16px;
+}
+
+.t-key { color: var(--jv-key); }
+.t-str { color: var(--jv-str); }
+.t-num { color: var(--jv-num); }
+.t-bool { color: var(--jv-bool); }
+.t-null { color: var(--jv-null); }
+.t-punc { color: var(--jv-punct); }
+
+/* Links inside string values — opened with Cmd/Ctrl+Click.
+   At rest a link is visually indistinguishable from a plain string: no
+   underline, no hand cursor, no tooltip. Only while Cmd/Ctrl is held
+   (.is-cmd, tracked by the content script) does the link *under the cursor*
+   turn into a link — everything else stays ordinary text. */
+.jv-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: default;
+}
+
+.jv-root.is-cmd .jv-link {
+  cursor: pointer;
+}
+
+.jv-root.is-cmd .jv-link:hover {
+  color: var(--jv-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.jv-root.is-cmd .jv-link:active {
+  opacity: 0.75;
+}
+
+/* ------------------------------------------------------------------ errors */
+
+.jv-error {
+  margin: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--jv-null);
+  background: var(--jv-err-bg);
+  border-radius: 8px;
+  color: var(--jv-null);
+  font-size: 12.5px;
+}
+
+.jv-error-title {
+  margin-right: 4px;
+}
+
+/* ------------------------------------------------------------------- toast */
+
+.jv-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  z-index: 50;
+  transform: translate(-50%, 10px);
+  opacity: 0;
+  pointer-events: none;
+  background: var(--jv-toast-bg);
+  color: var(--jv-toast-fg);
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.jv-toast.is-show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------------------------------------------------------- back to top */
+
+.jv-top {
+  position: fixed;
+  right: 22px;
+  bottom: 26px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--jv-border);
+  border-radius: 10px;
+  background: var(--jv-surface);
+  color: var(--jv-fg);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease,
+    border-color 0.12s ease, color 0.12s ease;
+}
+
+.jv-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.jv-top:hover {
+  border-color: var(--jv-accent);
+  color: var(--jv-accent);
+}
+
+.jv-top:focus-visible {
+  outline: 2px solid var(--jv-accent);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .jv-stats { display: none; }
+  .jv-select { max-width: 150px; }
+}
+
+@media (max-width: 640px) {
+  .jv-btn { padding: 6px 7px; }
+  .jv-url { max-width: 92vw; }
+  .jv-ln { padding-left: 40px; }
+  .jv-ln::before { width: 34px; }
+}
+
+@media print {
+  .jv-bar {
+    position: static;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .jv-btn,
+  .jv-select,
+  .jv-toast,
+  .jv-top {
+    display: none !important;
+  }
+}
