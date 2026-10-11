@@ -470,6 +470,10 @@ async function testContracts() {
     'welcome window shows the version (v' + MANIFEST.version + ')');
   ok(mainHtml.includes('github.com/xlab6/json-viewer-safari'),
     'welcome window shows the GitHub address');
+  const appCss = fs.readFileSync(
+    path.join(projRoot, 'xcode/JSON Viewer/JSON Viewer/Resources/Style.css'), 'utf8');
+  ok(/\.meta\s*\{[^}]*flex-direction:\s*column/.test(appCss),
+    'version and address are stacked vertically');
   eq((pbxproj.match(/MARKETING_VERSION = /g) || []).length, 4, 'four MARKETING_VERSION entries');
   ok(pbxproj.includes('MARKETING_VERSION = ' + MANIFEST.version + ';'),
     'MARKETING_VERSION matches the manifest version');

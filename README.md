@@ -92,7 +92,7 @@ xcodebuild -project "JSON Viewer.xcodeproj" -scheme "JSON Viewer" -configuration
 ```bash
 npm install      # 仅 devDependencies：jsdom
 npm run check    # JS 语法检查 + manifest 校验（nativeMessaging / 无死按钮）
-npm test         # jsdom 冒烟测试（145 项断言）
+npm test         # jsdom 冒烟测试（146 项断言）
 npm run icons    # 抠底 + 裁剪 + 重生成全部图标（extension 6 个 + AppIcon 10 个 + 欢迎页 1 个）
 ```
 
@@ -120,7 +120,7 @@ json-viewer-safari/
 │   ├── logo-source.png      # logo 源图（1000×990，透明底）
 │   ├── build-icons.swift    # 抠底 + 裁剪 + 全尺寸生成（纯 Swift，无第三方包）
 │   └── lint-manifest.js     # 清单与引用文件校验
-├── tests/smoke.mjs          # jsdom 冒烟测试（145 项断言）
+├── tests/smoke.mjs          # jsdom 冒烟测试（146 项断言）
 ├── demo/
 │   ├── preview.html         # 免安装 UI 预览（任意浏览器直接打开）
 │   └── sample.json          # 本地体验用示例
