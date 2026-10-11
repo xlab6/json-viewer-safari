@@ -15,7 +15,7 @@
   普通点击不跳走；顶栏网址点击可复制全文
 - **等宽字体自选**：下拉列出系统安装的全部等宽字体
 - **主题**：自动跟随系统明暗 / 暗 / 亮，持久化
-- **顶栏**：请求网址（超长中间省略）+ 渲染时间戳 + 大小 · 行数 · 键数 · 深度
+- **顶栏**：请求网址（超长中间省略）+ 渲染时间戳 + 大小 · 行数 · 键数 · 深度（嵌套层级，根为 1）
 - **回顶按钮**：滚动超过 300px 后在右下角出现
 - **复制 / 下载 .json**；解析失败时显示错误原因与原文
 
@@ -45,7 +45,7 @@ xcodebuild -project "JSON Viewer.xcodeproj" -scheme "JSON Viewer" -configuration
 ```bash
 npm install      # 仅 jsdom
 npm run check    # JS 语法 + manifest 校验
-npm test         # 冒烟测试（146 项断言）
+npm test         # 冒烟测试（150 项断言）
 npm run icons    # 换 logo 后重生成全部图标
 ```
 
@@ -66,7 +66,7 @@ json-viewer-safari/
 │   ├── logo-source.png      # logo 源图
 │   ├── build-icons.swift    # 抠底 + 裁剪 + 全尺寸生成（npm run icons）
 │   └── lint-manifest.js
-├── tests/smoke.mjs          # 冒烟测试（146 项断言）
+├── tests/smoke.mjs          # 冒烟测试（150 项断言）
 ├── demo/preview.html        # 预览页
 ├── demo/sample.json
 └── xcode/JSON Viewer/       # safari-web-extension-converter 生成的工程

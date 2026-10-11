@@ -266,6 +266,7 @@ async function testSingleView() {
   const stats = doc.querySelector('.jv-stats').textContent;
   ok(/lines/.test(stats), 'stats line rendered: ' + stats);
   ok(/keys/.test(stats), 'stats include key count');
+  ok(/depth 3/.test(stats), 'depth = nesting levels with root = 1: ' + stats);
 
   dom.window.close();
 }
@@ -556,6 +557,33 @@ async function testLongUrlBar() {
   dom.window.close();
 }
 
+/* ----------------------------------------------------------------- test 11 */
+async function testDepthSemantics() {
+  console.log('\n[11] depth = container nesting levels, root = 1');
+
+  // https://api.github.com style: a flat object of strings -> depth 1
+  const flat = await makeDom(
+    '<!doctype html><html><head></head><body><pre>' +
+    esc(JSON.stringify({
+      message: 'Not Found',
+      documentation_url: 'https://docs.github.com/rest'
+    })) + '</pre></body></html>'
+  );
+  await sleep(150);
+  const flatStats = flat.window.document.querySelector('.jv-stats').textContent;
+  ok(/depth 1/.test(flatStats), 'flat document is depth 1: ' + flatStats);
+  ok(/2 keys/.test(flatStats), 'flat document reports 2 keys');
+  flat.window.close();
+
+  const nested = await makeDom(
+    '<!doctype html><html><head></head><body><pre>{"a":{"b":1}}</pre></body></html>'
+  );
+  await sleep(150);
+  const nestedStats = nested.window.document.querySelector('.jv-stats').textContent;
+  ok(/depth 2/.test(nestedStats), 'one nesting level is depth 2: ' + nestedStats);
+  nested.window.close();
+}
+
 try {
   await testSingleView();
   await testNoTakeover();
@@ -567,6 +595,7 @@ try {
   await testContracts();
   await testBackgroundRelay();
   await testLongUrlBar();
+  await testDepthSemantics();
 } catch (err) {
   failed++;
   console.error('\nUNCAUGHT: ' + (err && err.stack ? err.stack : err));

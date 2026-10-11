@@ -698,16 +698,18 @@
     try { return new Blob([s]).size; } catch (e) { return s.length; }
   }
 
+  // Depth = container nesting levels with the root counted as 1. Primitive
+  // values live *on* their level and do not add one, so {"a": 1} is depth 1
+  // and {"a": {"b": 1}} is depth 2 (matches how people read a document).
   function analyze(root) {
     if (root === null || typeof root !== 'object') return null;
     var keys = 0, nodes = 0, depth = 0;
     var stack = [{ v: root, d: 1 }];
     while (stack.length) {
       var it = stack.pop();
-      if (it.d > depth) depth = it.d;
       var v = it.v;
-      nodes += 1;
-      if (v === null || typeof v !== 'object') continue;
+      if (v === null || typeof v !== 'object') { nodes += 1; continue; }
+      if (it.d > depth) depth = it.d;
       if (Array.isArray(v)) {
         for (var i = 0; i < v.length; i++) stack.push({ v: v[i], d: it.d + 1 });
       } else {
